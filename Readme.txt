@@ -7,3 +7,4 @@ Feel free to copy, modify or play this game.
 Features:
  - improved UI
  - tracks high score 
+ - pause mode

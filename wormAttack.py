@@ -174,7 +174,7 @@ def menuScreen():
 
     directFont = pygame.font.SysFont('calibri', 20)
     directSurf = directFont.render('Eat the most apples without hitting', True, BLACK)
-    directSurf2 = directFont.render('the edges and bitting worm', True, BLACK)
+    directSurf2 = directFont.render('the edges and bitting the worm', True, BLACK)
 
     directSurf3 = directFont.render('move: arrow keys', True, BLACK)
     directSurf4 = directFont.render('pause: space bar', True, BLACK)
@@ -190,7 +190,7 @@ def menuScreen():
         DISPLAY.blit(titleSurf1, (WINDOWWIDTH/2 - 67, WINDOWHEIGHT/2-100))
 
         DISPLAY.blit(directSurf, (WINDOWWIDTH/2 - 10, WINDOWHEIGHT/2 ))
-        DISPLAY.blit(directSurf2, (WINDOWWIDTH/2 + 13, WINDOWHEIGHT/ 2 + 25))
+        DISPLAY.blit(directSurf2, (WINDOWWIDTH/2 + 8, WINDOWHEIGHT/ 2 + 25))
         DISPLAY.blit(directSurf3, (WINDOWWIDTH/2 + 50, WINDOWHEIGHT/2 + 58))
         DISPLAY.blit(directSurf4, (WINDOWWIDTH/2 + 50, WINDOWHEIGHT/2 + 83))
 
@@ -236,7 +236,7 @@ def gameOverScreen():
     gameOverFont = pygame.font.SysFont('calibri', 70)
     gameSurf = gameOverFont.render('Game Over', True, WHITE)
     gameRect = gameSurf.get_rect()
-    gameRect.midtop = (WINDOWWIDTH / 2, 10)
+    gameRect.midbottom = (WINDOWWIDTH / 2, WINDOWHEIGHT/2 - 30)
     
     #Draw High Score    
     drawHighScore(gameScore)
@@ -286,13 +286,13 @@ def drawHighScore(score):
     displayScore = "Highest Score: " + str(HIGHSCORE[0]['score'])
     highScoreSurf = highScoreFont.render(displayScore, True, WHITE)
     highScoreRect = highScoreSurf.get_rect()
-    highScoreRect.midtop = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
+    highScoreRect.midtop = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2 + 40)
     
     #display only current Score
     showCurrentScore = "Score: " + str(gameScore)
     scoreSurf = highScoreFont.render(showCurrentScore, True, WHITE)
     scoreRect = scoreSurf.get_rect()
-    scoreRect.midtop = (WINDOWWIDTH / 2, WINDOWHEIGHT / 3)
+    scoreRect.midtop = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2 - 10)
     
     DISPLAY.blit(scoreSurf, scoreRect)
     DISPLAY.blit(highScoreSurf, highScoreRect)
