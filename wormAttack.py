@@ -62,6 +62,7 @@ def runGame():
                   {'x': startx - 1, 'y':starty},
                   {'x':startx - 2,  'y':starty}]
     direction = RIGHT
+    wasPaused = False
     
     #start the apple in a random place
     apple = getRandomLocation()
@@ -81,9 +82,12 @@ def runGame():
                     direction = DOWN
                 elif event.key == K_ESCAPE:
                     terminate()
-                elif event.key == K_p:
-                    pauseGame()
-        
+                elif event.key == K_SPACE:
+                    pauseGame(wormCoords, apple, gameScore)
+                    wasPaused = True
+                    #give time for players to come back
+                    #pygame.time.wait(2000) 
+
         #check if worm hit itself or the edge
         if wormCoords[HEAD]['x'] == -1 or wormCoords[HEAD]['x'] == CELLWIDTH or wormCoords[HEAD]['y'] == -1 or wormCoords[HEAD]['y'] == CELLHEIGHT:
             return #game over
@@ -96,7 +100,8 @@ def runGame():
             apple = getRandomLocation() # set new apple
         else:
             del wormCoords[-1] #remove worm's tail 
-            
+        
+
         #move the worm
         if direction == UP:
             newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] - 1}
@@ -117,13 +122,31 @@ def runGame():
         FPSCLOCK.tick(FPS)
         
 
-def pauseGame():
+def pauseGame(wormCoords, appleCoord, score):
     DISPLAY.fill(RED)
-    pauseSurf = BASICFONT.render('Press p again to return to the game', True, WHITE)
+    pauseSurf = BASICFONT.render('Press Space Bar to return to the game', True, WHITE)
     pauseRect = pauseSurf.get_rect()
     pauseRect.center = (WINDOWWIDTH / 2, WINDOWHEIGHT / 2)
+    DISPLAY.blit(pauseSurf, pauseRect)
+
     pygame.display.update()
-    pygame.time.wait(2000)
+
+    isPaused = True
+    while isPaused:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                    terminate()
+            elif event.type == KEYDOWN:
+                if event.key == K_SPACE:
+                    isPaused = False
+
+    #give time for player
+    drawBackground()            #draw entire screen
+    drawWorm(wormCoords)
+    drawApple(appleCoord)
+    drawScore(score)
+    pygame.display.update()     #update
+    pygame.time.wait(1800)      #give time
 
 
 def drawPressKeyMsg():
@@ -146,14 +169,33 @@ def isKeyPress():
 
 
 def menuScreen():
-    titleFont = pygame.font.SysFont('calibri', 70)
+    titleFont = pygame.font.SysFont('calibri', 70, True)
     titleSurf1 = titleFont.render('Worm Attack', True, WHITE)
+
+    directFont = pygame.font.SysFont('calibri', 20)
+    directSurf = directFont.render('Eat the most apples without hitting', True, BLACK)
+    directSurf2 = directFont.render('the edges and bitting worm', True, BLACK)
+
+    directSurf3 = directFont.render('move: arrow keys', True, BLACK)
+    directSurf4 = directFont.render('pause: space bar', True, BLACK)
+
+    pressFont = pygame.font.Font('freesansbold.ttf', 25)
+    pressToPlay = pressFont.render('Press a key to play', True, SLATE)
+
     
     downMove = 1
     rightMove = 10
     while True:
         DISPLAY.fill(BGCOLOR)
-        DISPLAY.blit(titleSurf1, (WINDOWWIDTH/2 - 50, WINDOWHEIGHT/2-50))
+        DISPLAY.blit(titleSurf1, (WINDOWWIDTH/2 - 67, WINDOWHEIGHT/2-100))
+
+        DISPLAY.blit(directSurf, (WINDOWWIDTH/2 - 10, WINDOWHEIGHT/2 ))
+        DISPLAY.blit(directSurf2, (WINDOWWIDTH/2 + 13, WINDOWHEIGHT/ 2 + 25))
+        DISPLAY.blit(directSurf3, (WINDOWWIDTH/2 + 50, WINDOWHEIGHT/2 + 58))
+        DISPLAY.blit(directSurf4, (WINDOWWIDTH/2 + 50, WINDOWHEIGHT/2 + 83))
+
+        DISPLAY.blit(pressToPlay, (WINDOWWIDTH/2 + 10, WINDOWHEIGHT/2 + 130))
+
         lastSeg = drawBigWorm(rightMove, downMove)
         if (lastSeg.top > WINDOWHEIGHT + 10):
             downMove = 1
@@ -161,7 +203,7 @@ def menuScreen():
             pygame.time.wait(1000)
         if (rightMove > WINDOWWIDTH/3):
             rightMove = 10
-        drawPressKeyMsg()
+        #drawPressKeyMsg()
         
         if isKeyPress():
             pygame.event.get() 
